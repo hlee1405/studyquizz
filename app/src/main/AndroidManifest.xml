@@ -20,6 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.SignUpActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".ui.QuizBuilderActivity" />
         <activity android:name=".ui.QuizPlayActivity" />
@@ -32,6 +33,7 @@
         <activity android:name=".ui.QuizFoundActivity" />
         <activity android:name=".ui.QuizResultActivity" />
         <activity android:name=".ui.QuizResultDetailActivity" />
+        <activity android:name=".ui.ProfileActivity" />
     </application>
 
 </manifest>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Quiz Học Tập</string>
+    <string name="app_name">Study Quiz</string>
     <string name="welcome_user">Chào %1$s</string>
     <string name="welcome_user_placeholder">Chào mừng!</string>
     <string name="logout">Đăng xuất</string>
@@ -93,4 +93,12 @@
     <string name="quiz_answers_label">Đáp án</string>
     <string name="question_hint">Nhập nội dung câu hỏi</string>
     <string name="select_answer">Chọn đáp án đúng</string>
+    <string name="sign_in">Đăng nhập</string>
+    <string name="sign_up">Đăng ký</string>
+    <string name="dont_have_account">Chưa có tài khoản? %1$s</string>
+    <string name="remember_me">Ghi nhớ đăng nhập</string>
+    <string name="forgot_password">Quên mật khẩu?</string>
+    <string name="confirm_password">Xác nhận mật khẩu</string>
+    <string name="already_have_account">Đã có tài khoản? %1$s</string>
+    <string name="full_name">Họ và tên</string>
 </resources>

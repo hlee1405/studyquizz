@@ -32,17 +32,17 @@
             android:letterSpacing="0.1"
             android:layout_marginTop="24dp" />
 
-        <!-- Sign In Title -->
+        <!-- Sign Up Title -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sign_in"
+            android:text="@string/sign_up"
             android:textColor="@color/white"
             android:textSize="32sp"
             android:textStyle="bold"
             android:layout_marginTop="16dp" />
 
-        <!-- Sign Up Link -->
+        <!-- Sign In Link -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,15 +52,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Chưa có tài khoản? "
+                android:text="Đã có tài khoản? "
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/txtSignUp"
+                android:id="@+id/txtSignIn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sign_up"
+                android:text="@string/sign_in"
                 android:textColor="@color/header_blue_light"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -99,6 +99,46 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Full Name Input -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/full_name"
+                android:textColor="@color/text_dark"
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/input_field_background"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_profile_blue"
+                    android:tint="#9E9E9E"
+                    android:layout_marginEnd="12dp" />
+
+                <EditText
+                    android:id="@+id/inputFullName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Nhập họ và tên"
+                    android:textColorHint="#9E9E9E"
+                    android:textColor="@color/text_dark"
+                    android:textSize="16sp"
+                    android:background="@android:color/transparent"
+                    android:inputType="textPersonName"
+                    android:padding="0dp" />
+            </LinearLayout>
+
             <!-- Email Input -->
             <TextView
                 android:layout_width="wrap_content"
@@ -130,7 +170,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="shaharuzzaman@gmail.com"
+                    android:hint="email@example.com"
                     android:textColorHint="#9E9E9E"
                     android:textColor="@color/text_dark"
                     android:textSize="16sp"
@@ -179,44 +219,52 @@
                     android:padding="0dp" />
             </LinearLayout>
 
-            <!-- Remember Me and Forgot Password Row -->
+            <!-- Confirm Password Input -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/confirm_password"
+                android:textColor="@color/text_dark"
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
+                android:background="@drawable/input_field_background"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:layout_marginBottom="32dp">
 
-                <CheckBox
-                    android:id="@+id/checkboxRememberMe"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/remember_me"
-                    android:textColor="@color/text_dark"
-                    android:textSize="14sp" />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@android:drawable/ic_lock_idle_lock"
+                    android:tint="#9E9E9E"
+                    android:layout_marginEnd="12dp" />
 
-                <View
+                <EditText
+                    android:id="@+id/inputConfirmPassword"
                     android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:id="@+id/txtForgotPassword"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/forgot_password"
-                    android:textColor="@color/header_blue_light"
-                    android:textSize="14sp"
-                    android:clickable="true"
-                    android:focusable="true" />
+                    android:layout_weight="1"
+                    android:hint="********"
+                    android:textColorHint="#9E9E9E"
+                    android:textColor="@color/text_dark"
+                    android:textSize="16sp"
+                    android:background="@android:color/transparent"
+                    android:inputType="textPassword"
+                    android:padding="0dp" />
             </LinearLayout>
 
-            <!-- Sign In Button -->
+            <!-- Sign Up Button -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLogin"
+                android:id="@+id/btnSignUp"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:text="@string/sign_in"
+                android:text="@string/sign_up"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"
@@ -228,3 +276,4 @@
     </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

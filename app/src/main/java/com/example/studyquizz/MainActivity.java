@@ -22,6 +22,7 @@ import com.example.studyquizz.ui.HistoryActivity;
 import com.example.studyquizz.ui.JoinQuizActivity;
 import com.example.studyquizz.ui.LoginActivity;
 import com.example.studyquizz.ui.MyQuizzesActivity;
+import com.example.studyquizz.ui.ProfileActivity;
 import com.example.studyquizz.ui.QuizBuilderActivity;
 import com.example.studyquizz.ui.QuizPlayActivity;
 import com.example.studyquizz.ui.adapter.QuizAdapter;
@@ -134,10 +135,7 @@ public class MainActivity extends AppCompatActivity implements QuizAdapter.OnQui
             startActivity(new Intent(this, MyQuizzesActivity.class));
         });
         binding.btnProfile.setOnClickListener(v -> {
-            // Show logout dialog or profile
-            authManager.logout();
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+            startActivity(new Intent(this, ProfileActivity.class));
         });
 
 
