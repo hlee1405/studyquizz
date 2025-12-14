@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="teal_700">#018786</color>
+    <color name="teal_200">#FFBB86FC</color>
+    
+    <!-- Header colors -->
+    <color name="header_blue">#1E3A8A</color>
+    <color name="header_blue_light">#3B82F6</color>
+    
+    <!-- Card gradients -->
+    <color name="create_quiz_red">#FF6B6B</color>
+    <color name="create_quiz_orange">#FF8E53</color>
+    <color name="join_quiz_blue">#4A90E2</color>
+    <color name="join_quiz_purple">#9B59B6</color>
+    
+    <!-- Category colors -->
+    <color name="science_pink">#FF6B9D</color>
+    <color name="science_orange">#FFA07A</color>
+    <color name="geography_blue">#4A90E2</color>
+    <color name="geography_light_blue">#87CEEB</color>
+    <color name="sports_pink">#FF6B9D</color>
+    <color name="sports_purple">#9B59B6</color>
+    <color name="biology_green">#52C41A</color>
+    <color name="biology_light_green">#95E1D3</color>
+    
+    <!-- Bottom nav -->
+    <color name="bottom_nav_dark">#0F172A</color>
+    <color name="text_gray">#64748B</color>
+    <color name="text_dark">#1E293B</color>
+    
+    <!-- Categories screen -->
+    <color name="categories_background_light">#E3F2FD</color>
+    <color name="categories_background_dark">#BBDEFB</color>
+    
+    <!-- Quiz card background -->
+    <color name="quiz_card_background">#F5F5F5</color>
+    
+    <!-- Primary red color for result detail screen -->
+    <color name="primary_red">#FF6B6B</color>
+    <color name="correct_green">#52C41A</color>
+    <color name="wrong_red">#FF4D4F</color>
+</resources>

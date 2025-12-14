@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="135"
+        android:startColor="@color/create_quiz_red"
+        android:centerColor="#FF7A6B"
+        android:endColor="@color/create_quiz_orange"
+        android:type="linear" />
+    <corners android:radius="20dp" />
+</shape>
+
+
+

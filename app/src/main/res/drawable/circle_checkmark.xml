@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Circle background -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/join_quiz_blue" />
+        </shape>
+    </item>
+    <!-- Checkmark -->
+    <item
+        android:width="14dp"
+        android:height="14dp"
+        android:drawable="@drawable/ic_checkmark_white"
+        android:gravity="center" />
+</layer-list>
+

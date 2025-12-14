@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/white"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <!-- Left Section: Text Information -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginEnd="16dp">
+
+            <!-- Quiz Title -->
+            <TextView
+                android:id="@+id/txtQuizTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Câu hỏi số 1-20"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_dark"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Total Questions -->
+            <TextView
+                android:id="@+id/txtTotalQuestions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tổng số câu: 20"
+                android:textSize="14sp"
+                android:textColor="@color/text_gray"
+                android:layout_marginBottom="4dp" />
+
+            <!-- Correct Answers -->
+            <TextView
+                android:id="@+id/txtCorrectAnswers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số câu đúng: 2"
+                android:textSize="14sp"
+                android:textColor="@color/text_gray"
+                android:layout_marginBottom="4dp" />
+
+            <!-- Time and Date -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@android:drawable/ic_menu_recent_history"
+                    android:tint="@color/text_gray"
+                    android:layout_marginEnd="4dp" />
+
+                <TextView
+                    android:id="@+id/txtTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4:45 16 Tháng 6, 2025"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_gray" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Right Section: Circular Progress -->
+        <FrameLayout
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:gravity="center">
+
+            <!-- Background Circle -->
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/circular_progress_background"
+                android:layout_gravity="center" />
+
+            <!-- Circular Progress -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:progressDrawable="@drawable/circular_progress"
+                android:progress="10"
+                android:max="100"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_gravity="center" />
+
+            <!-- Percentage Text in Center -->
+            <TextView
+                android:id="@+id/txtPercentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10.0%"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_dark"
+                android:layout_gravity="center" />
+        </FrameLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

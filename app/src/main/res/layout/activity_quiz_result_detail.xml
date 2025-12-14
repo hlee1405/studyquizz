@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="false"
+    tools:context=".ui.QuizResultDetailActivity">
+
+    <!-- ScrollView for content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:paddingBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/buttonContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="60dp"
+            android:paddingBottom="24dp">
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Đề trắc nghiệm an toàn bảo mật hệ thống thông tin số 1"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_dark"
+                android:gravity="center"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Completion Time -->
+            <TextView
+                android:id="@+id/txtCompletionTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Thời gian hoàn thành: 0 phút 40 giây"
+                android:textSize="16sp"
+                android:textColor="@color/text_dark"
+                android:gravity="center"
+                android:layout_marginBottom="28dp" />
+
+            <!-- Circular Progress Indicator - Centered -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="20dp">
+
+                <FrameLayout
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center">
+
+                    <!-- Background Circle -->
+                    <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:src="@drawable/circular_progress_background"
+                        android:layout_gravity="center" />
+
+                    <!-- Circular Progress -->
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:progressDrawable="@drawable/circular_progress_red"
+                        android:progress="10"
+                        android:max="100"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_gravity="center" />
+
+                    <!-- Percentage Text in Center -->
+                    <TextView
+                        android:id="@+id/txtPercentage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10.0%"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary_red"
+                        android:layout_gravity="center"
+                        android:gravity="center" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- Correct Count -->
+            <TextView
+                android:id="@+id/txtCorrectCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Số câu đúng: 2/20"
+                android:textSize="16sp"
+                android:textColor="@color/text_dark"
+                android:gravity="center"
+                android:layout_marginBottom="32dp" />
+
+            <!-- Questions List Title -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Danh sách câu hỏi"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_dark"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Questions RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerQuestions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_question_detail" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Button Container at Bottom -->
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:background="@color/white"
+        android:elevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Retry Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRetry"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Làm lại"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/header_blue"
+            android:layout_marginEnd="8dp"
+            android:padding="16dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp" />
+
+        <!-- Home Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnReturnToSetup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Home"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/header_blue"
+            android:layout_marginStart="8dp"
+            android:padding="16dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

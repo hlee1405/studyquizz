@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Studyquizz">
+        <activity
+            android:name=".ui.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".ui.QuizBuilderActivity" />
+        <activity android:name=".ui.QuizPlayActivity" />
+        <activity android:name=".ui.HistoryActivity" />
+        <activity android:name=".ui.CategoriesActivity" />
+        <activity android:name=".ui.AddQuestionActivity" />
+        <activity android:name=".ui.MyQuizzesActivity" />
+        <activity android:name=".ui.QuizCreatedActivity" />
+        <activity android:name=".ui.JoinQuizActivity" />
+        <activity android:name=".ui.QuizFoundActivity" />
+        <activity android:name=".ui.QuizResultActivity" />
+        <activity android:name=".ui.QuizResultDetailActivity" />
+    </application>
+
+</manifest>

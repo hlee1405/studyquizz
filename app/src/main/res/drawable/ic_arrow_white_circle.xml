@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M20,2C10.06,2 2,10.06 2,20s8.06,18 18,18 18,-8.06 18,-18S29.94,2 20,2z"/>
+    <path
+        android:fillColor="@color/join_quiz_blue"
+        android:pathData="M16.3,13.5 L22,19.2 L16.3,24.9 L19.1,26.7 L25.3,19.5 L18.1,12.3 Z"/>
+</vector>
