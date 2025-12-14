@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -19,8 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.studyquizz.R;
 import com.example.studyquizz.data.QuizRepository;
 import com.example.studyquizz.databinding.ActivityQuizBuilderBinding;
-import com.example.studyquizz.databinding.DialogAddQuestionBinding;
-import com.example.studyquizz.databinding.DialogQuestionTypeBinding;
 import com.example.studyquizz.model.Question;
 import com.example.studyquizz.model.QuestionType;
 import com.example.studyquizz.model.Quiz;
@@ -101,25 +97,14 @@ public class QuizBuilderActivity extends AppCompatActivity implements QuestionSu
     }
 
     private void showQuestionTypeDialog() {
-        DialogQuestionTypeBinding dialogBinding = DialogQuestionTypeBinding.inflate(LayoutInflater.from(this));
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setView(dialogBinding.getRoot())
-                .create();
-
-        // Set click listeners
-        dialogBinding.btnMultipleChoice.setOnClickListener(v -> {
-            selectedQuestionTypeIndex = 0;
-            updateQuestionTypeDisplay();
-            dialog.dismiss();
-        });
-
-        dialogBinding.btnTrueFalse.setOnClickListener(v -> {
-            selectedQuestionTypeIndex = 1;
-            updateQuestionTypeDisplay();
-            dialog.dismiss();
-        });
-
-        dialog.show();
+        String[] options = new String[]{"Trắc nghiệm 4 đáp án", "Đúng/Sai"};
+        new AlertDialog.Builder(this)
+                .setTitle("Chọn loại câu hỏi")
+                .setItems(options, (dialog, which) -> {
+                    selectedQuestionTypeIndex = which;
+                    updateQuestionTypeDisplay();
+                })
+                .show();
     }
 
     private void updateQuestionTypeDisplay() {
@@ -295,121 +280,6 @@ public class QuizBuilderActivity extends AppCompatActivity implements QuestionSu
         adapter.submit(currentQuiz.getQuestions());
     }
 
-    private void showAddQuestionDialog() {
-        DialogAddQuestionBinding dialogBinding = DialogAddQuestionBinding.inflate(LayoutInflater.from(this));
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setView(dialogBinding.getRoot())
-                .setTitle(R.string.add_question_title)
-                .setPositiveButton(R.string.save, null)
-                .setNegativeButton(R.string.cancel, null)
-                .create();
-
-        // Set question type based on selection
-        boolean isMultipleChoice = selectedQuestionTypeIndex == 0;
-        ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, 
-                new String[]{"Trắc nghiệm", "Đúng/Sai"});
-        dialogBinding.spinnerType.setAdapter(typeAdapter);
-        dialogBinding.spinnerType.setSelection(isMultipleChoice ? 0 : 1);
-        dialogBinding.spinnerType.setOnItemSelectedListener(new SimpleItemSelectedListener(() -> toggleTrueFalse(dialogBinding)));
-        toggleTrueFalse(dialogBinding);
-        connectRadioButtons(dialogBinding.radioCorrect1, dialogBinding.radioCorrect2, dialogBinding.radioCorrect3, dialogBinding.radioCorrect4);
-
-        dialog.setOnShowListener(d -> {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
-                Question question = buildQuestionFromDialog(dialogBinding);
-                if (question != null) {
-                    currentQuiz.addQuestion(question);
-                    adapter.submit(currentQuiz.getQuestions());
-                    
-                    // Check if we've added enough questions
-                    int numberOfQuestion = Integer.parseInt(binding.inputNumberOfQuestion.getText().toString().trim());
-                    if (currentQuiz.getQuestions().size() >= numberOfQuestion) {
-                        // Save quiz and finish
-                        saveQuiz();
-                        dialog.dismiss();
-                    } else {
-                        // Continue adding questions
-                        Toast.makeText(this, getString(R.string.questions_added, currentQuiz.getQuestions().size(), numberOfQuestion), Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                        showAddQuestionDialog(); // Show dialog again
-                    }
-                }
-            });
-        });
-
-        dialog.show();
-    }
-
-    private void toggleTrueFalse(DialogAddQuestionBinding dialogBinding) {
-        boolean isTrueFalse = dialogBinding.spinnerType.getSelectedItemPosition() == 1;
-        dialogBinding.containerOption3.setVisibility(isTrueFalse ? View.GONE : View.VISIBLE);
-        dialogBinding.containerOption4.setVisibility(isTrueFalse ? View.GONE : View.VISIBLE);
-        if (isTrueFalse) {
-            dialogBinding.inputOption1.setText("Đúng");
-            dialogBinding.inputOption2.setText("Sai");
-            dialogBinding.radioCorrect1.setChecked(true);
-        }
-    }
-
-    private void connectRadioButtons(RadioButton... radios) {
-        for (RadioButton rb : radios) {
-            rb.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked) {
-                    for (RadioButton other : radios) {
-                        if (other != buttonView) {
-                            other.setChecked(false);
-                        }
-                    }
-                }
-            });
-        }
-    }
-
-    private Question buildQuestionFromDialog(DialogAddQuestionBinding dialogBinding) {
-        String content = dialogBinding.inputQuestion.getText().toString().trim();
-        if (TextUtils.isEmpty(content)) {
-            Toast.makeText(this, "Nhập nội dung câu hỏi", Toast.LENGTH_SHORT).show();
-            return null;
-        }
-        List<String> options = new ArrayList<>();
-        List<RadioButton> radios = new ArrayList<>();
-        options.add(dialogBinding.inputOption1.getText().toString().trim());
-        options.add(dialogBinding.inputOption2.getText().toString().trim());
-        radios.add(dialogBinding.radioCorrect1);
-        radios.add(dialogBinding.radioCorrect2);
-
-        boolean isTrueFalse = dialogBinding.spinnerType.getSelectedItemPosition() == 1;
-        if (!isTrueFalse) {
-            options.add(dialogBinding.inputOption3.getText().toString().trim());
-            options.add(dialogBinding.inputOption4.getText().toString().trim());
-            radios.add(dialogBinding.radioCorrect3);
-            radios.add(dialogBinding.radioCorrect4);
-        }
-
-        int correctIndex = -1;
-        for (int i = 0; i < radios.size(); i++) {
-            if (radios.get(i).isChecked()) {
-                correctIndex = i;
-                break;
-            }
-        }
-        if (correctIndex == -1) correctIndex = 0;
-
-        List<String> cleaned = new ArrayList<>();
-        for (String opt : options) {
-            if (!TextUtils.isEmpty(opt)) {
-                cleaned.add(opt);
-            }
-        }
-        if (cleaned.size() < 2) {
-            Toast.makeText(this, "Cần ít nhất 2 đáp án", Toast.LENGTH_SHORT).show();
-            return null;
-        }
-
-        QuestionType type = isTrueFalse ? QuestionType.TRUE_FALSE : QuestionType.MULTIPLE_CHOICE;
-        if (correctIndex >= cleaned.size()) correctIndex = 0;
-        return new Question(content, cleaned, correctIndex, type);
-    }
 
     private void handleImport(Uri uri) {
         if (uri == null) return;

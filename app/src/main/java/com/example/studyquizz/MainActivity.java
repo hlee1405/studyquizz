@@ -6,18 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.studyquizz.data.AuthManager;
 import com.example.studyquizz.data.QuizRepository;
 import com.example.studyquizz.databinding.ActivityMainBinding;
 import com.example.studyquizz.model.Quiz;
-import com.example.studyquizz.ui.CategoriesActivity;
 import com.example.studyquizz.ui.HistoryActivity;
 import com.example.studyquizz.ui.JoinQuizActivity;
 import com.example.studyquizz.ui.LoginActivity;
@@ -35,18 +31,6 @@ public class MainActivity extends AppCompatActivity implements QuizAdapter.OnQui
     private QuizRepository repository;
     private AuthManager authManager;
     private QuizAdapter adapter;
-    
-    private final ActivityResultLauncher<Intent> categoriesLauncher = registerForActivityResult(
-        new ActivityResultContracts.StartActivityForResult(),
-        result -> {
-            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                String category = result.getData().getStringExtra("category");
-                if (category != null) {
-                    filterByCategory(category);
-                }
-            }
-        }
-    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
