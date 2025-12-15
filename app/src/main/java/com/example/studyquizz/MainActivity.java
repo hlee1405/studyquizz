@@ -9,6 +9,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.example.studyquizz.data.AuthManager;
 import com.example.studyquizz.data.QuizRepository;
@@ -46,20 +49,8 @@ public class MainActivity extends AppCompatActivity implements QuizAdapter.OnQui
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         
-        // Adjust bottom navigation bar to avoid system navigation bar overlap
-        binding.getRoot().setOnApplyWindowInsetsListener((v, insets) -> {
-            int systemNavBarHeight = insets.getSystemWindowInsetBottom();
-            if (systemNavBarHeight > 0) {
-                int extraPadding = 12; // Extra padding to ensure FAB is not covered
-                binding.bottomNavLayout.setPadding(
-                    binding.bottomNavLayout.getPaddingStart(),
-                    binding.bottomNavLayout.getPaddingTop(),
-                    binding.bottomNavLayout.getPaddingEnd(),
-                    systemNavBarHeight + extraPadding
-                );
-            }
-            return insets;
-        });
+        // Adjust bottom navigation bar height based on system navigation area (gesture/3-button)
+        setupWindowInsetsForBottomBar();
 
         authManager = new AuthManager(this);
         if (!authManager.isLoggedIn()) {
@@ -252,5 +243,73 @@ public class MainActivity extends AppCompatActivity implements QuizAdapter.OnQui
         intent.putExtra(QuizPlayActivity.EXTRA_QUIZ_ID, quiz.getId());
         intent.putExtra(QuizPlayActivity.EXTRA_MODE, mode);
         startActivity(intent);
+    }
+
+    private void setupWindowInsetsForBottomBar() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavLayout, (v, insets) -> {
+            Insets navBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars());
+            Insets gestures = insets.getInsets(WindowInsetsCompat.Type.systemGestures());
+
+            boolean hasNavBar = navBars.bottom > 0;
+            boolean hasGestureBar = gestures.bottom > 0;
+            // Heuristic: 3 nút khi có navBar rõ ràng (thường >=20dp). Gesture nếu không có navBar.
+            boolean isThreeButton = hasNavBar && navBars.bottom >= dpToPx(20);
+            boolean isGesture = !isThreeButton && hasGestureBar && navBars.bottom == 0;
+
+            if (isThreeButton) {
+                // Nâng thanh nav app lên trên thanh hệ thống
+                float lift = -navBars.bottom;
+                v.setTranslationY(lift);
+                v.setPadding(
+                        v.getPaddingLeft(),
+                        v.getPaddingTop(),
+                        v.getPaddingRight(),
+                        dpToPx(4)
+                );
+                binding.scrollView.setPadding(
+                        binding.scrollView.getPaddingLeft(),
+                        binding.scrollView.getPaddingTop(),
+                        binding.scrollView.getPaddingRight(),
+                        navBars.bottom + dpToPx(4)
+                );
+            } else if (isGesture) {
+                // Gesture: giữ nguyên, padding mỏng
+                v.setTranslationY(0);
+                v.setPadding(
+                        v.getPaddingLeft(),
+                        v.getPaddingTop(),
+                        v.getPaddingRight(),
+                        dpToPx(4)
+                );
+                binding.scrollView.setPadding(
+                        binding.scrollView.getPaddingLeft(),
+                        binding.scrollView.getPaddingTop(),
+                        binding.scrollView.getPaddingRight(),
+                        dpToPx(4)
+                );
+            } else {
+                // Trường hợp khác/mixed: không nâng, dùng inset an toàn
+                int bottomInset = Math.max(navBars.bottom, gestures.bottom);
+                v.setTranslationY(0);
+                v.setPadding(
+                        v.getPaddingLeft(),
+                        v.getPaddingTop(),
+                        v.getPaddingRight(),
+                        bottomInset
+                );
+                binding.scrollView.setPadding(
+                        binding.scrollView.getPaddingLeft(),
+                        binding.scrollView.getPaddingTop(),
+                        binding.scrollView.getPaddingRight(),
+                        bottomInset
+                );
+            }
+            return insets;
+        });
+    }
+
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
     }
 }

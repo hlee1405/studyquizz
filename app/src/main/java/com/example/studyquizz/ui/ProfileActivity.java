@@ -2,11 +2,11 @@ package com.example.studyquizz.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
@@ -33,26 +33,9 @@ public class ProfileActivity extends AppCompatActivity {
         setupViews();
         loadUserInfo();
         setupBottomNavigation();
-        
-        // Handle system navigation bar overlap
-        binding.getRoot().setOnApplyWindowInsetsListener((v, insets) -> {
-            int systemNavBarHeight = insets.getSystemWindowInsetBottom();
-            if (systemNavBarHeight > 0) {
-                int extraPadding = 12;
-                binding.bottomNavLayout.setPadding(
-                    binding.bottomNavLayout.getPaddingStart(),
-                    binding.bottomNavLayout.getPaddingTop(),
-                    binding.bottomNavLayout.getPaddingEnd(),
-                    systemNavBarHeight + extraPadding
-                );
-                // Adjust card margin to avoid overlap
-                android.view.ViewGroup.MarginLayoutParams cardParams = 
-                    (android.view.ViewGroup.MarginLayoutParams) binding.cardProfile.getLayoutParams();
-                cardParams.bottomMargin = 80 + systemNavBarHeight + extraPadding;
-                binding.cardProfile.setLayoutParams(cardParams);
-            }
-            return insets;
-        });
+
+        // Handle system navigation/gesture insets like MainActivity
+        setupWindowInsetsForBottomBar();
     }
 
     private void setupViews() {
@@ -118,6 +101,51 @@ public class ProfileActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Hủy", null)
                 .show();
+    }
+
+    private void setupWindowInsetsForBottomBar() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavLayout, (v, insets) -> {
+            Insets navBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars());
+            Insets gestures = insets.getInsets(WindowInsetsCompat.Type.systemGestures());
+
+            boolean hasNavBar = navBars.bottom > 0;
+            boolean hasGestureBar = gestures.bottom > 0;
+            boolean isThreeButton = hasNavBar && navBars.bottom >= dpToPx(20);
+            boolean isGesture = !isThreeButton && hasGestureBar && navBars.bottom == 0;
+
+            int paddingBottom;
+            if (isThreeButton) {
+                // Nâng bar lên khỏi cụm nút hệ thống
+                v.setTranslationY(-navBars.bottom);
+                paddingBottom = dpToPx(4);
+            } else if (isGesture) {
+                v.setTranslationY(0);
+                paddingBottom = dpToPx(4);
+            } else {
+                v.setTranslationY(0);
+                paddingBottom = Math.max(navBars.bottom, gestures.bottom);
+            }
+
+            v.setPadding(
+                    v.getPaddingLeft(),
+                    v.getPaddingTop(),
+                    v.getPaddingRight(),
+                    paddingBottom
+            );
+
+            // Lift the profile card so it does not clash with the bottom bar
+            android.view.ViewGroup.MarginLayoutParams cardParams =
+                    (android.view.ViewGroup.MarginLayoutParams) binding.cardProfile.getLayoutParams();
+            int baseBottomMargin = dpToPx(80); // existing design margin
+            cardParams.bottomMargin = baseBottomMargin + paddingBottom + (isThreeButton ? navBars.bottom : 0);
+            binding.cardProfile.setLayoutParams(cardParams);
+
+            return insets;
+        });
+    }
+
+    private int dpToPx(int dp) {
+        return Math.round(dp * getResources().getDisplayMetrics().density);
     }
 }
 
