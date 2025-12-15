@@ -101,8 +101,10 @@ public class QuizRepository {
     private void loadData() {
         Type quizType = new TypeToken<List<Quiz>>() {}.getType();
         quizzes = gson.fromJson(prefs.getString(KEY_QUIZZES, null), quizType);
+        boolean addedDefaults = false;
         if (quizzes == null) {
             quizzes = defaultQuizzes();
+            addedDefaults = true;
         } else {
             for (Quiz quiz : quizzes) {
                 if (quiz.getQuestions() == null) {
@@ -133,6 +135,14 @@ public class QuizRepository {
         quizIdMapping = gson.fromJson(prefs.getString(KEY_QUIZ_ID_MAPPING, null), mappingType);
         if (quizIdMapping == null) {
             quizIdMapping = new HashMap<>();
+        }
+
+        // Ensure new default quizzes appear for existing users
+        if (!addedDefaults) {
+            addedDefaults = mergeDefaultQuizzesIfMissing();
+        }
+        if (addedDefaults) {
+            persist();
         }
     }
 
@@ -178,6 +188,29 @@ public class QuizRepository {
         return new ArrayList<>(customCategories);
     }
 
+    /**
+     * Add newly introduced default quizzes for users who already have data.
+     * Matching by title to avoid duplicates if IDs changed.
+     */
+    private boolean mergeDefaultQuizzesIfMissing() {
+        List<Quiz> defaults = defaultQuizzes();
+        boolean changed = false;
+        for (Quiz def : defaults) {
+            boolean exists = false;
+            for (Quiz existing : quizzes) {
+                if (existing.getTitle() != null && existing.getTitle().equals(def.getTitle())) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                quizzes.add(def);
+                changed = true;
+            }
+        }
+        return changed;
+    }
+
     private List<Quiz> defaultQuizzes() {
         List<Quiz> list = new ArrayList<>();
 
@@ -202,7 +235,32 @@ public class QuizRepository {
         opts3.add("Kiểm soát, Toàn vẹn, Phân tích");
         opts3.add("Không có");
         itQuiz.addQuestion(new Question("Bộ ba CIA gồm những thành phần nào?", opts3, 0, QuestionType.MULTIPLE_CHOICE));
+        List<String> opts4 = new ArrayList<>();
+        opts4.add("TCP");
+        opts4.add("UDP");
+        opts4.add("HTTP");
+        opts4.add("FTP");
+        itQuiz.addQuestion(new Question("Giao thức nào hoạt động không kết nối (connectionless)?", opts4, 1, QuestionType.MULTIPLE_CHOICE));
         list.add(itQuiz);
+
+        Quiz scienceQuiz = new Quiz("Khám phá khoa học", "Kiến thức tự nhiên", "Khoa học", null);
+        List<String> opts5 = new ArrayList<>();
+        opts5.add("Hydro");
+        opts5.add("Heli");
+        opts5.add("Oxy");
+        opts5.add("Carbon");
+        scienceQuiz.addQuestion(new Question("Nguyên tố hóa học đứng đầu bảng tuần hoàn là gì?", opts5, 0, QuestionType.MULTIPLE_CHOICE));
+        List<String> opts6 = new ArrayList<>();
+        opts6.add("Sao Kim");
+        opts6.add("Sao Thủy");
+        opts6.add("Sao Hỏa");
+        opts6.add("Sao Mộc");
+        scienceQuiz.addQuestion(new Question("Hành tinh gần Mặt Trời nhất là hành tinh nào?", opts6, 1, QuestionType.MULTIPLE_CHOICE));
+        List<String> opts7 = new ArrayList<>();
+        opts7.add("Đúng");
+        opts7.add("Sai");
+        scienceQuiz.addQuestion(new Question("Âm thanh truyền được trong chân không.", opts7, 1, QuestionType.TRUE_FALSE));
+        list.add(scienceQuiz);
 
         return list;
     }
