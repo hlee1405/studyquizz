@@ -23,12 +23,14 @@ public class AddQuestionActivity extends AppCompatActivity {
     public static final String EXTRA_QUESTION_INDEX = "question_index";
     public static final String EXTRA_TOTAL_QUESTIONS = "total_questions";
     public static final String EXTRA_QUESTION_TYPE = "question_type";
+    public static final String EXTRA_QUESTION_TO_EDIT = "question_to_edit";
 
     private ActivityAddQuestionBinding binding;
     private int questionIndex;
     private int totalQuestions;
     private boolean isMultipleChoice;
     private int selectedAnswerIndex = -1;
+    private Question questionToEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +42,34 @@ public class AddQuestionActivity extends AppCompatActivity {
         questionIndex = getIntent().getIntExtra(EXTRA_QUESTION_INDEX, 1);
         totalQuestions = getIntent().getIntExtra(EXTRA_TOTAL_QUESTIONS, 1);
         isMultipleChoice = getIntent().getBooleanExtra(EXTRA_QUESTION_TYPE, true);
+        questionToEdit = (Question) getIntent().getSerializableExtra(EXTRA_QUESTION_TO_EDIT);
 
         setupViews();
         setupProgressIndicator();
+        
+        // If editing, load question data
+        if (questionToEdit != null) {
+            loadQuestionForEdit();
+        }
+    }
+    
+    private void loadQuestionForEdit() {
+        binding.inputQuestion.setText(questionToEdit.getContent());
+        List<String> options = questionToEdit.getOptions();
+        if (options.size() > 0) {
+            binding.inputOption1.setText(options.get(0));
+        }
+        if (options.size() > 1) {
+            binding.inputOption2.setText(options.get(1));
+        }
+        if (options.size() > 2) {
+            binding.inputOption3.setText(options.get(2));
+        }
+        if (options.size() > 3) {
+            binding.inputOption4.setText(options.get(3));
+        }
+        selectedAnswerIndex = questionToEdit.getCorrectIndex();
+        updateAnswerIcons();
     }
 
     private void setupViews() {

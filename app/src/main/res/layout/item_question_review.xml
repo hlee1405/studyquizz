@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/categories_background_light">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Question Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:id="@+id/txtQuestionNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Câu 1:"
+                android:textColor="@color/text_dark"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/btnEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sửa"
+                android:textColor="@color/header_blue"
+                android:textSize="14sp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lưu"
+                android:textColor="@color/header_blue"
+                android:textSize="14sp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/btnDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Xóa"
+                android:textColor="#F44336"
+                android:textSize="14sp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <!-- Question Content -->
+        <TextView
+            android:id="@+id/txtQuestion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Câu hỏi sẽ hiển thị ở đây"
+            android:textColor="@color/text_dark"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp"
+            android:lineSpacingExtra="4dp" />
+
+        <EditText
+            android:id="@+id/editQuestion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Câu hỏi sẽ hiển thị ở đây"
+            android:textColor="@color/text_dark"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/spinner_background"
+            android:padding="12dp"
+            android:minHeight="56dp"
+            android:visibility="gone"
+            android:inputType="textMultiLine" />
+
+        <!-- Answer Options -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Option A -->
+            <LinearLayout
+                android:id="@+id/containerOptionA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/answer_field_background"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:text="A"
+                    android:textColor="@color/text_dark"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginEnd="12dp" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/txtOptionA"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Đáp án A"
+                        android:textColor="@color/text_dark"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/editOptionA"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Đáp án A"
+                        android:textColor="@color/text_dark"
+                        android:textSize="15sp"
+                        android:background="@android:color/transparent"
+                        android:padding="0dp"
+                        android:visibility="gone"
+                        android:inputType="text"
+                        android:minHeight="24dp" />
+                </FrameLayout>
+
+                <ImageView
+                    android:id="@+id/iconCorrectA"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/circle_checkmark"
+                    android:visibility="gone"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- Option B -->
+            <LinearLayout
+                android:id="@+id/containerOptionB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/answer_field_background"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:text="B"
+                    android:textColor="@color/text_dark"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginEnd="12dp" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/txtOptionB"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Đáp án B"
+                        android:textColor="@color/text_dark"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/editOptionB"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Đáp án B"
+                        android:textColor="@color/text_dark"
+                        android:textSize="15sp"
+                        android:background="@android:color/transparent"
+                        android:padding="0dp"
+                        android:visibility="gone"
+                        android:inputType="text"
+                        android:minHeight="24dp" />
+                </FrameLayout>
+
+                <ImageView
+                    android:id="@+id/iconCorrectB"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/circle_checkmark"
+                    android:visibility="gone"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- Option C -->
+            <LinearLayout
+                android:id="@+id/containerOptionC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/answer_field_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:text="C"
+                    android:textColor="@color/text_dark"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginEnd="12dp" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/txtOptionC"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Đáp án C"
+                        android:textColor="@color/text_dark"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/editOptionC"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Đáp án C"
+                        android:textColor="@color/text_dark"
+                        android:textSize="15sp"
+                        android:background="@android:color/transparent"
+                        android:padding="0dp"
+                        android:visibility="gone"
+                        android:inputType="text"
+                        android:minHeight="24dp" />
+                </FrameLayout>
+
+                <ImageView
+                    android:id="@+id/iconCorrectC"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/circle_checkmark"
+                    android:visibility="gone"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- Option D -->
+            <LinearLayout
+                android:id="@+id/containerOptionD"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/answer_field_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:text="D"
+                    android:textColor="@color/text_dark"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginEnd="12dp" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/txtOptionD"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Đáp án D"
+                        android:textColor="@color/text_dark"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/editOptionD"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Đáp án D"
+                        android:textColor="@color/text_dark"
+                        android:textSize="15sp"
+                        android:background="@android:color/transparent"
+                        android:padding="0dp"
+                        android:visibility="gone"
+                        android:inputType="text"
+                        android:minHeight="24dp" />
+                </FrameLayout>
+
+                <ImageView
+                    android:id="@+id/iconCorrectD"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/circle_checkmark"
+                    android:visibility="gone"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
+

@@ -20,6 +20,7 @@ import com.example.studyquizz.databinding.ActivityQuizBuilderBinding;
 import com.example.studyquizz.model.Question;
 import com.example.studyquizz.model.QuestionType;
 import com.example.studyquizz.model.Quiz;
+import com.example.studyquizz.ui.adapter.QuestionReviewAdapter;
 import com.example.studyquizz.ui.adapter.QuestionSummaryAdapter;
 import com.example.studyquizz.util.ImportHelper;
 
@@ -27,13 +28,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class QuizBuilderActivity extends AppCompatActivity implements QuestionSummaryAdapter.OnActionListener {
+public class QuizBuilderActivity extends AppCompatActivity implements QuestionSummaryAdapter.OnActionListener, QuestionReviewAdapter.OnActionListener {
     public static final String EXTRA_QUIZ_ID = "quiz_id";
 
     private ActivityQuizBuilderBinding binding;
     private QuizRepository repository;
     private Quiz currentQuiz;
     private QuestionSummaryAdapter adapter;
+    private QuestionReviewAdapter reviewAdapter;
     private String generatedPassword;
     private String generatedQuizId;
     private int totalQuestions;
@@ -43,22 +45,40 @@ public class QuizBuilderActivity extends AppCompatActivity implements QuestionSu
     private final ActivityResultLauncher<String> filePicker =
             registerForActivityResult(new ActivityResultContracts.GetContent(), this::handleImport);
     
+    private int editingQuestionPosition = -1;
+    
     private final ActivityResultLauncher<Intent> addQuestionLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     Question question = (Question) result.getData().getSerializableExtra("question");
                     if (question != null) {
-                        currentQuiz.addQuestion(question);
-                        adapter.submit(currentQuiz.getQuestions());
-                        
-                        // Check if we've added enough questions
-                        if (currentQuiz.getQuestions().size() >= totalQuestions) {
-                            // Save quiz and finish
-                            saveQuiz();
+                        if (editingQuestionPosition >= 0 && editingQuestionPosition < currentQuiz.getQuestions().size()) {
+                            // Update existing question
+                            currentQuiz.getQuestions().set(editingQuestionPosition, question);
+                            editingQuestionPosition = -1;
                         } else {
-                            // Continue adding questions
-                            int nextIndex = currentQuiz.getQuestions().size() + 1;
-                            startAddQuestionActivity(nextIndex);
+                            // Add new question
+                            currentQuiz.addQuestion(question);
+                            
+                            // Check if we've added enough questions
+                            if (currentQuiz.getQuestions().size() >= totalQuestions) {
+                                // Save quiz and finish
+                                saveQuiz();
+                                return;
+                            } else {
+                                // Continue adding questions
+                                int nextIndex = currentQuiz.getQuestions().size() + 1;
+                                startAddQuestionActivity(nextIndex);
+                                return;
+                            }
+                        }
+                        
+                        // Update adapters
+                        if (reviewAdapter != null) {
+                            reviewAdapter.submit(currentQuiz.getQuestions());
+                        }
+                        if (adapter != null) {
+                            adapter.submit(currentQuiz.getQuestions());
                         }
                     }
                 }
@@ -91,6 +111,31 @@ public class QuizBuilderActivity extends AppCompatActivity implements QuestionSu
 
         // Edit Password button
         binding.btnEditPassword.setOnClickListener(v -> showEditPasswordDialog());
+
+        // Import File button
+        binding.btnImport.setOnClickListener(v -> {
+            // Open file picker for PDF and DOCX files
+            try {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                String[] mimeTypes = {
+                    "application/pdf",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "application/msword"
+                };
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                Intent chooser = Intent.createChooser(intent, "Chọn file PDF hoặc DOCX");
+                if (chooser.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(chooser, 100);
+                } else {
+                    Toast.makeText(this, "Không tìm thấy ứng dụng để chọn file", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(this, "Lỗi mở file picker: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+        });
 
         // Continue button - will show dialog to add questions
         binding.btnContinue.setOnClickListener(v -> handleContinue());
@@ -165,25 +210,8 @@ public class QuizBuilderActivity extends AppCompatActivity implements QuestionSu
             return;
         }
 
-        if (TextUtils.isEmpty(numberOfQuestionStr)) {
-            Toast.makeText(this, "Nhập số lượng câu hỏi", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         if (TextUtils.isEmpty(durationStr)) {
             Toast.makeText(this, "Nhập thời gian làm bài", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        int numberOfQuestion;
-        try {
-            numberOfQuestion = Integer.parseInt(numberOfQuestionStr);
-            if (numberOfQuestion <= 0) {
-                Toast.makeText(this, "Số lượng câu hỏi phải lớn hơn 0", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Số lượng câu hỏi không hợp lệ", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -199,22 +227,59 @@ public class QuizBuilderActivity extends AppCompatActivity implements QuestionSu
             return;
         }
 
-        // Update quiz with basic info
-        currentQuiz.setTitle(title);
-        String description = "Thời gian: " + duration + " phút, Số câu hỏi: " + numberOfQuestion;
-        currentQuiz.setDescription(description);
-        currentQuiz.setDurationMinutes(duration); // Lưu thời gian vào quiz
-        
-        // Set default category (no category selection)
-        currentQuiz.setCategory(null);
-        currentQuiz.setCustomCategory(null);
+        // Check if we have questions
+        if (currentQuiz.getQuestions().isEmpty()) {
+            // No questions - need to add questions manually
+            if (TextUtils.isEmpty(numberOfQuestionStr)) {
+                Toast.makeText(this, "Nhập số lượng câu hỏi", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-        // Store question info
-        totalQuestions = numberOfQuestion;
-        isMultipleChoice = selectedQuestionTypeIndex == 0;
+            int numberOfQuestion;
+            try {
+                numberOfQuestion = Integer.parseInt(numberOfQuestionStr);
+                if (numberOfQuestion <= 0) {
+                    Toast.makeText(this, "Số lượng câu hỏi phải lớn hơn 0", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Số lượng câu hỏi không hợp lệ", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-        // Start AddQuestionActivity
-        startAddQuestionActivity(1);
+            // Update quiz with basic info
+            currentQuiz.setTitle(title);
+            String description = "Thời gian: " + duration + " phút, Số câu hỏi: " + numberOfQuestion;
+            currentQuiz.setDescription(description);
+            currentQuiz.setDurationMinutes(duration);
+            
+            // Set default category
+            currentQuiz.setCategory(null);
+            currentQuiz.setCustomCategory(null);
+
+            // Store question info
+            totalQuestions = numberOfQuestion;
+            isMultipleChoice = selectedQuestionTypeIndex == 0;
+
+            // Start AddQuestionActivity
+            startAddQuestionActivity(1);
+        } else {
+            // We have questions (from import) - save quiz
+            int numberOfQuestion = currentQuiz.getQuestions().size();
+            
+            // Update quiz with basic info
+            currentQuiz.setTitle(title);
+            String description = "Thời gian: " + duration + " phút, Số câu hỏi: " + numberOfQuestion;
+            currentQuiz.setDescription(description);
+            currentQuiz.setDurationMinutes(duration);
+            
+            // Set default category
+            currentQuiz.setCategory(null);
+            currentQuiz.setCustomCategory(null);
+            
+            // Save and finish
+            saveQuiz();
+        }
     }
     
     private void startAddQuestionActivity(int questionIndex) {
@@ -273,11 +338,27 @@ public class QuizBuilderActivity extends AppCompatActivity implements QuestionSu
                 }
             }
         }
-        // Initialize adapter for question list (hidden in new UI)
+        // Initialize adapter for question list
         adapter = new QuestionSummaryAdapter(this);
+        
+        // Initialize review adapter
+        reviewAdapter = new QuestionReviewAdapter(this);
         binding.recyclerQuestions.setLayoutManager(new LinearLayoutManager(this));
-        binding.recyclerQuestions.setAdapter(adapter);
-        adapter.submit(currentQuiz.getQuestions());
+        binding.recyclerQuestions.setAdapter(reviewAdapter);
+        reviewAdapter.submit(currentQuiz.getQuestions());
+        
+        // Update button text based on state
+        updateContinueButtonText();
+    }
+
+    private void updateContinueButtonText() {
+        if (!currentQuiz.getQuestions().isEmpty()) {
+            // If we have questions, button should say "Hoàn thành"
+            binding.btnContinue.setText(getString(R.string.finish_text));
+        } else {
+            // If no questions, button should say "Tiếp tục"
+            binding.btnContinue.setText(getString(R.string.continue_text));
+        }
     }
 
 
@@ -298,12 +379,36 @@ public class QuizBuilderActivity extends AppCompatActivity implements QuestionSu
             imported = ImportHelper.parseFromPdf(this, uri);
         }
         if (!imported.isEmpty()) {
+            currentQuiz.getQuestions().clear(); // Clear existing questions
             currentQuiz.getQuestions().addAll(imported);
-            adapter.submit(currentQuiz.getQuestions());
+            reviewAdapter.submit(currentQuiz.getQuestions());
+            
+            // Update number of questions field with imported count
+            int totalImported = currentQuiz.getQuestions().size();
+            binding.inputNumberOfQuestion.setText(String.valueOf(totalImported));
+            
+            // Show review screen
+            showReviewScreen();
+            
             Toast.makeText(this, "Đã import " + imported.size() + " câu hỏi", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Không đọc được dữ liệu câu hỏi", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Không đọc được dữ liệu câu hỏi. Vui lòng kiểm tra định dạng file.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void showReviewScreen() {
+        // Hide form, show review screen
+        binding.cardForm.setVisibility(View.GONE);
+        binding.cardReviewQuestions.setVisibility(View.VISIBLE);
+        
+        // Setup continue button in review screen
+        binding.btnContinueReview.setOnClickListener(v -> {
+            // Go back to form
+            binding.cardReviewQuestions.setVisibility(View.GONE);
+            binding.cardForm.setVisibility(View.VISIBLE);
+            // Update button text to "Hoàn thành" if we have questions
+            updateContinueButtonText();
+        });
     }
 
     private void saveQuiz() {
@@ -327,8 +432,43 @@ public class QuizBuilderActivity extends AppCompatActivity implements QuestionSu
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
+            Uri uri = data.getData();
+            if (uri != null) {
+                handleImport(uri);
+            }
+        }
+    }
+
+    @Override
     public void onRemove(Question question) {
         currentQuiz.getQuestions().remove(question);
-        adapter.submit(currentQuiz.getQuestions());
+        if (reviewAdapter != null) {
+            reviewAdapter.submit(currentQuiz.getQuestions());
+        }
+        if (adapter != null) {
+            adapter.submit(currentQuiz.getQuestions());
+        }
+        // Update number of questions
+        binding.inputNumberOfQuestion.setText(String.valueOf(currentQuiz.getQuestions().size()));
+    }
+
+    // QuestionReviewAdapter callbacks
+    @Override
+    public void onQuestionUpdated(Question question, int position) {
+        // Question was updated inline, just refresh adapter
+        if (reviewAdapter != null) {
+            reviewAdapter.notifyItemChanged(position);
+        }
+    }
+
+    @Override
+    public void onCorrectAnswerChanged(Question question, int newCorrectIndex) {
+        question.setCorrectIndex(newCorrectIndex);
+        if (reviewAdapter != null) {
+            reviewAdapter.notifyDataSetChanged();
+        }
     }
 }

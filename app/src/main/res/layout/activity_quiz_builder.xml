@@ -248,6 +248,21 @@
                 android:inputType="number"
                 android:layout_marginBottom="24dp" />
 
+            <!-- Import File Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnImport"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="@string/import_file"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/header_blue"
+                android:backgroundTint="@android:color/transparent"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/header_blue"
+                app:cornerRadius="12dp"
+                android:layout_marginBottom="12dp" />
+
             <!-- Continue Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnContinue"
@@ -296,15 +311,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerQuestions"
+    <!-- Review Questions Card (shown after import) -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardReviewQuestions"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="-80dp"
+        android:background="@color/white"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerQuestions"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnContinueReview"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="@string/continue_text"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/header_blue"
+                app:cornerRadius="12dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSave"
@@ -317,12 +366,6 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAddQuestion"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnImport"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone" />
