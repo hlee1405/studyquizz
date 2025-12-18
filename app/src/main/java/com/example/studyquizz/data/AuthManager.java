@@ -9,10 +9,12 @@ public class AuthManager {
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_FULL_NAME = "full_name";
+    private static final String KEY_DEFAULT_USERS_INITIALIZED = "default_users_initialized";
     private final SharedPreferences prefs;
 
     public AuthManager(Context context) {
         prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        ensureDefaultUsers();
     }
 
     public boolean isLoggedIn() {
@@ -71,6 +73,42 @@ public class AuthManager {
 
     public String getFullName() {
         return prefs.getString(KEY_FULL_NAME, "");
+    }
+
+    /**
+     * Khởi tạo sẵn 2 tài khoản người dùng mặc định cho app ở lần chạy đầu tiên.
+     * Tài khoản 1:
+     *  - Tên: Người dùng A
+     *  - Email: user1@example.com
+     *  - Mật khẩu: 123456
+     * Tài khoản 2:
+     *  - Tên: Người dùng B
+     *  - Email: user2@example.com
+     *  - Mật khẩu: 123456
+     */
+    private void ensureDefaultUsers() {
+        boolean initialized = prefs.getBoolean(KEY_DEFAULT_USERS_INITIALIZED, false);
+        if (initialized) return;
+
+        SharedPreferences.Editor editor = prefs.edit();
+
+        // User 1
+        String email1 = "user1@example.com";
+        String password1 = "123456";
+        String fullName1 = "Người dùng A";
+        editor.putString(KEY_EMAIL + "_" + email1, password1);
+        editor.putString(KEY_FULL_NAME + "_" + email1, fullName1);
+
+        // User 2
+        String email2 = "user2@example.com";
+        String password2 = "123456";
+        String fullName2 = "Người dùng B";
+        editor.putString(KEY_EMAIL + "_" + email2, password2);
+        editor.putString(KEY_FULL_NAME + "_" + email2, fullName2);
+
+        // Đánh dấu đã khởi tạo để không tạo lại nhiều lần
+        editor.putBoolean(KEY_DEFAULT_USERS_INITIALIZED, true);
+        editor.apply();
     }
 }
 
