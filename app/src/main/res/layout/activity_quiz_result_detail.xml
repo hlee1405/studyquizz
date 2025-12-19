@@ -107,6 +107,15 @@
                 android:gravity="center"
                 android:layout_marginBottom="32dp" />
 
+            <!-- Questions List Title -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Danh sách câu hỏi"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_dark"
+                android:layout_marginBottom="16dp" />
 
             <!-- Questions RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
