@@ -32,13 +32,6 @@ public class JoinQuizActivity extends AppCompatActivity {
         }
     }
 
-    private void setupViews() {
-        // Back button
-        binding.btnBack.setOnClickListener(v -> finish());
-
-        // Next button
-        binding.btnNext.setOnClickListener(v -> handleNext());
-    }
 
     private void handleNext() {
         String quizId = binding.inputQuizId.getText().toString().trim();
