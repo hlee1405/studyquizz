@@ -21,9 +21,7 @@ public class AuthManager {
         return !TextUtils.isEmpty(prefs.getString(KEY_EMAIL, null));
     }
 
-    public void logout() {
-        prefs.edit().clear().apply();
-    }
+
 
     public boolean login(String email, String password) {
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
@@ -36,29 +34,6 @@ public class AuthManager {
         }
         // Get full name if available
         String fullName = prefs.getString(KEY_FULL_NAME + "_" + email, "");
-        prefs.edit()
-                .putString(KEY_EMAIL, email)
-                .putString(KEY_PASSWORD, password)
-                .putString(KEY_FULL_NAME, fullName)
-                .apply();
-        return true;
-    }
-
-    public boolean signup(String fullName, String email, String password) {
-        if (TextUtils.isEmpty(fullName) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            return false;
-        }
-        // Check if user already exists
-        String existingPassword = prefs.getString(KEY_EMAIL + "_" + email, null);
-        if (existingPassword != null) {
-            return false; // User already exists
-        }
-        // Save new user
-        prefs.edit()
-                .putString(KEY_EMAIL + "_" + email, password)
-                .putString(KEY_FULL_NAME + "_" + email, fullName)
-                .apply();
-        // Auto login after signup
         prefs.edit()
                 .putString(KEY_EMAIL, email)
                 .putString(KEY_PASSWORD, password)
