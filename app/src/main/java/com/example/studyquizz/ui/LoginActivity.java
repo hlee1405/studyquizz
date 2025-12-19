@@ -23,16 +23,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        authManager = new AuthManager(this);
-        if (authManager.isLoggedIn()) {
-            goHome();
-            return;
-        }
-
-        binding.btnLogin.setOnClickListener(v -> handleLogin());
-        binding.txtSignUp.setOnClickListener(v -> goToSignUp());
-        
         // Handle system navigation bar overlap
         ViewCompat.setOnApplyWindowInsetsListener(binding.scrollView, (v, insets) -> {
             int bottomPadding = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
