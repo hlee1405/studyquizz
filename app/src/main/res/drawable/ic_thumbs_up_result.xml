@@ -13,14 +13,14 @@
     <!-- Cuff fill (same yellow as thumb) -->
     <path
         android:fillColor="#FFD700"
-        android:pathData="M1,21h4v-2H1v2z"/>
+        android:pathData="M1,21h4V9H1v12z"/>
 
-    <!-- Cuff top horizontal border line -->
+    <!-- Inner cuff border going full height -->
     <path
         android:strokeColor="#FFA500"
         android:strokeWidth="1"
-        android:strokeLineCap="round"
-        android:pathData="M1,19L5,19"/>
+        android:fillColor="@android:color/transparent"
+        android:pathData="M1,21h4V9H1z"/>
 </vector>
 
 
