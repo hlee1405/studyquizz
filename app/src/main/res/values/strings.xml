@@ -20,6 +20,7 @@
     <string name="category">Danh mục</string>
     <string name="custom_category">Danh mục khác</string>
     <string name="import_file">Import DOCX/PDF</string>
+    <string name="import_file_done">Đã import file</string>
     <string name="add_question">Thêm câu hỏi</string>
     <string name="save_quiz">Lưu quiz</string>
     <string name="question_content">Nội dung câu hỏi</string>
