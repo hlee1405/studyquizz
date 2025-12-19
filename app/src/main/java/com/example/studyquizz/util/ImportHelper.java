@@ -12,6 +12,7 @@ import com.tom_roush.pdfbox.text.PDFTextStripper;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,7 +35,27 @@ public class ImportHelper {
             for (XWPFParagraph paragraph : document.getParagraphs()) {
                 String text = paragraph.getText();
                 if (text != null && !text.trim().isEmpty()) {
-                    lines.add(text.trim());
+                    String trimmed = text.trim();
+
+                    // Nếu một đáp án trong file DOCX được tô đỏ, coi đó là đáp án đúng
+                    // bằng cách chèn dấu "*" để tái sử dụng logic parse hiện tại.
+                    boolean hasRedRun = false;
+                    for (XWPFRun run : paragraph.getRuns()) {
+                        String color = run.getColor();
+                        // Lưu ý: với version POI hiện tại, chúng ta chỉ có thể lấy màu
+                        // trực tiếp từ run.getColor(). Nếu màu đỏ đến từ style phức tạp
+                        // thì thư viện này có thể không đọc được.
+                        if (color != null && isRedColor(color)) {
+                            hasRedRun = true;
+                            break;
+                        }
+                    }
+
+                    if (hasRedRun && trimmed.matches("^[A-Da-d][\\).].*")) {
+                        trimmed = "*" + trimmed;
+                    }
+
+                    lines.add(trimmed);
                 }
             }
             questions.addAll(parseStructuredLines(lines));
@@ -113,6 +134,18 @@ public class ImportHelper {
         }
 
         return questions;
+    }
+
+    // Nhận diện màu đỏ trong các run của DOCX (thường lưu dưới dạng "FF0000").
+    private static boolean isRedColor(String color) {
+        String normalized = color.trim().toUpperCase(Locale.ROOT);
+        if (normalized.startsWith("#")) {
+            normalized = normalized.substring(1);
+        }
+        // Các biến thể phổ biến cho màu đỏ
+        return normalized.equals("FF0000")          // đỏ thuần
+                || normalized.equals("RED")        // tên màu
+                || normalized.endsWith("FF0000");  // dạng ARGB
     }
 
     private static Question buildQuestion(String content, List<String> options, int correctIndex) {
