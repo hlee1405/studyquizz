@@ -55,6 +55,15 @@ public class QuizRepository {
         return null;
     }
 
+    public void addQuiz(Quiz quiz) {
+        quizzes.add(quiz);
+        // Add custom category if exists
+        if (quiz.getCustomCategory() != null && !quiz.getCustomCategory().isEmpty()) {
+            addCustomCategory(quiz.getCustomCategory());
+        }
+        persist();
+    }
+
     public void updateQuiz(Quiz quiz) {
         for (int i = 0; i < quizzes.size(); i++) {
             if (quizzes.get(i).getId().equals(quiz.getId())) {
@@ -71,6 +80,13 @@ public class QuizRepository {
 
     public void deleteQuiz(String quizId) {
         quizzes.removeIf(quiz -> quiz.getId().equals(quizId));
+        persist();
+    }
+
+    public void saveResult(QuizResult result) {
+        List<QuizResult> list = history.getOrDefault(result.getQuizId(), new ArrayList<>());
+        list.add(result);
+        history.put(result.getQuizId(), list);
         persist();
     }
 
