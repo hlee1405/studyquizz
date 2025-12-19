@@ -361,9 +361,39 @@ public class QuizBuilderActivity extends AppCompatActivity implements QuestionSu
         }
     }
 
+    // Lấy tên file hiển thị từ Uri để show lên nút Import
+    private String getFileNameFromUri(Uri uri) {
+        String result = null;
+        if ("content".equals(uri.getScheme())) {
+            android.database.Cursor cursor = getContentResolver()
+                    .query(uri, null, null, null, null);
+            if (cursor != null) {
+                try {
+                    int nameIndex = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME);
+                    if (nameIndex >= 0 && cursor.moveToFirst()) {
+                        result = cursor.getString(nameIndex);
+                    }
+                } finally {
+                    cursor.close();
+                }
+            }
+        }
+        if (result == null) {
+            result = uri.getLastPathSegment();
+            if (result != null) {
+                int slash = result.lastIndexOf('/');
+                if (slash >= 0 && slash < result.length() - 1) {
+                    result = result.substring(slash + 1);
+                }
+            }
+        }
+        return result;
+    }
+
 
     private void handleImport(Uri uri) {
         if (uri == null) return;
+        String fileName = getFileNameFromUri(uri);
         String lower = uri.toString().toLowerCase();
         List<Question> imported = new ArrayList<>();
         String mime = getContentResolver().getType(uri);
@@ -387,6 +417,13 @@ public class QuizBuilderActivity extends AppCompatActivity implements QuestionSu
             int totalImported = currentQuiz.getQuestions().size();
             binding.inputNumberOfQuestion.setText(String.valueOf(totalImported));
             
+            // Update import button text to show imported file name
+            if (fileName != null && !fileName.isEmpty()) {
+                binding.btnImport.setText(fileName);
+            } else {
+                binding.btnImport.setText(getString(R.string.import_file_done));
+            }
+
             // Show review screen
             showReviewScreen();
             
