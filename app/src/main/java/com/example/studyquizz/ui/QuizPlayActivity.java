@@ -186,29 +186,6 @@ public class QuizPlayActivity extends AppCompatActivity {
         });
     }
 
-    private void setupControls() {
-        binding.btnNext.setOnClickListener(v -> {
-            saveCurrentAnswer();
-            if (position < quiz.getQuestions().size() - 1) {
-                position++;
-                renderQuestion();
-            } else {
-                // Last question, show finish dialog
-                showFinishDialog();
-            }
-        });
-        binding.btnExit.setOnClickListener(v -> showExitDialog());
-    }
-    
-    private void showFinishDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Hoàn thành quiz")
-                .setMessage("Bạn có muốn nộp bài không?")
-                .setPositiveButton("Nộp bài", (dialog, which) -> finishQuiz())
-                .setNegativeButton("Tiếp tục", (dialog, which) -> {})
-                .show();
-    }
-    
     private void showExitDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Thoát quiz")
