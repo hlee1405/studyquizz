@@ -45,7 +45,7 @@ public class HistoryActivity extends AppCompatActivity {
         for (List<QuizResult> results : map.values()) {
             combined.addAll(results);
         }
-
+        combined.sort(Comparator.comparingLong(QuizResult::getTimestamp));
         Collections.reverse(combined);
         adapter.submit(combined);
         binding.emptyView.setVisibility(combined.isEmpty() ? View.VISIBLE : View.GONE);

@@ -138,6 +138,16 @@ public class QuizResultDetailActivity extends AppCompatActivity {
         });
     }
     
+    private String formatDuration(long durationMs) {
+        if (durationMs <= 0) {
+            return "0 phút 0 giây";
+        }
+        long totalSeconds = durationMs / 1000;
+        long minutes = totalSeconds / 60;
+        long seconds = totalSeconds % 60;
+        return String.format(Locale.getDefault(), "%d phút %d giây", minutes, seconds);
+    }
+
     private void loadData() {
         // Prepare question data with user answers
         List<QuestionDetailAdapter.QuestionDetailItem> items = new ArrayList<>();
