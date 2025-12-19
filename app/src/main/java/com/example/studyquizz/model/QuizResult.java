@@ -98,15 +98,5 @@ public class QuizResult {
         this.duration = duration;
     }
 
-    public List<Integer> getUserAnswers() {
-        if (userAnswers == null) {
-            userAnswers = new ArrayList<>();
-        }
-        return userAnswers;
-    }
-
-    public void setUserAnswers(List<Integer> userAnswers) {
-        this.userAnswers = userAnswers != null ? new ArrayList<>(userAnswers) : new ArrayList<>();
-    }
 }
 

@@ -38,10 +38,6 @@ public class Question implements Serializable {
         this.content = content;
     }
 
-    public List<String> getOptions() {
-        return options;
-    }
-
     public void setOptions(List<String> options) {
         this.options = options == null ? new ArrayList<>() : new ArrayList<>(options);
     }
